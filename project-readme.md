@@ -20,9 +20,8 @@ The project combines multiple technologies:
 - OCR and handwriting recognition
 - Medicine information retrieval
 - Image analysis
-- QR code recognition
-- Cryptographic hashing
-- Blockchain-based record verification
+- QR code / packaging recognition
+- Centralized Medicine Registry & Batch Safety Verification
 
 We want to create a lightweight but functional prototype demonstrating how these technologies can work together in a single application.
 
@@ -110,11 +109,11 @@ The available product information matches the extracted prescription details.
 
 **PARTIAL MATCH**
 
-Some information matches, but other information is missing, unclear or different.
+Some information matches, but other information is missing, unclear or different (e.g. an approved generic equivalent with matching active ingredient and strength).
 
 **MISMATCH DETECTED**
 
-An important medicine detail appears to differ.
+An important medicine detail appears to differ (e.g. different active ingredient, conflicting strength, or incorrect dosage form).
 
 **UNABLE TO VERIFY**
 
@@ -126,9 +125,9 @@ The application must not independently approve medicine substitutions or recomme
 
 ---
 
-# 3. MEDICINE AUTHENTICITY VERIFICATION
+# 3. MEDICINE BATCH REGISTRY & SAFETY VERIFICATION
 
-This feature will work alongside the second feature.
+This feature works alongside the second feature to check packaging details against safety records.
 
 When a user uploads a medicine package, the application should attempt to extract:
 
@@ -139,21 +138,17 @@ When a user uploads a medicine package, the application should attempt to extrac
 - Expiry date
 - QR code or product identifier
 
-The extracted information can then be checked against a small sample medicine registry maintained by our application.
+The extracted information is then checked against a sample medicine and recall registry maintained by our application.
 
 ### Possible verification results
 
-- Recognised product record
-- Unknown product identifier
-- Expired according to the printed expiry date
-- Batch information mismatch
-- Insufficient information
+- **Recognised product record:** The batch is found in the registry and is active and valid.
+- **Expired product:** The printed or registered expiry date has passed.
+- **Safety recall alert:** The batch has been flagged with an official safety notice, quality defect, or recall alert.
+- **Unknown batch identifier:** The batch does not appear in our registry.
+- **Insufficient information:** Packaging text or QR code is illegible or missing.
 
-We do not intend to build a massive medicine database.
-
-For the prototype, a small collection of approximately 10–20 fictional demonstration medicine records will be sufficient.
-
-Use clearly labelled fictional data for demonstration purposes.
+We do not intend to build a massive medicine database. For the prototype, a collection of approximately 10–20 fictional demonstration medicine records will be sufficient, clearly labelled as fictional data.
 
 ### Important limitation
 
@@ -163,100 +158,39 @@ The application should distinguish between:
 
 - Visual information extracted from packaging.
 - Information found in our sample database.
-- Records registered by a manufacturer or supply-chain participant.
-- Actual physical medicine authenticity, which this prototype cannot independently establish.
+- Physical medicine authenticity, which this prototype cannot independently establish.
 
 Never claim that a product has passed laboratory testing unless an actual, traceable laboratory report is available.
 
 ---
 
-# 4. BLOCKCHAIN INTEGRATION
+# 4. APPLICATION PAGES
 
-Blockchain will be an additional technical component supporting medicine batch traceability and record integrity.
-
-We do not need to create a large public blockchain network or implement cryptocurrency.
-
-Instead, we intend to develop a lightweight blockchain demonstration.
-
-### Intended workflow
-
-A sample pharmaceutical supply chain will contain three participants:
-
-1. Manufacturer
-2. Distributor
-3. Pharmacy
-
-The manufacturer registers a sample medicine batch.
-
-The distributor records receiving the batch.
-
-The pharmacy records receiving the batch.
-
-Each event becomes part of a tamper-evident record history.
-
-### Blockchain block structure
-
-Each block should contain:
-
-- Block index
-- Timestamp
-- Batch identifier
-- Transaction information
-- Previous block hash
-- Current block hash
-
-SHA-256 can be used to generate block hashes.
-
-The application should provide a blockchain explorer where users can inspect the sample blocks and transactions.
-
-### Integrity demonstration
-
-The application should be able to demonstrate that modifying an earlier blockchain record causes subsequent hash validation to fail.
-
-The blockchain component is intended to demonstrate:
-
-- Distributed-ledger concepts
-- Transaction recording
-- Cryptographic hashing
-- Chain integrity
-- Medicine batch traceability
-
-We will use a local demonstration blockchain rather than claiming integration with real pharmaceutical manufacturers.
-
-Do not simply label ordinary database records as blockchain. The prototype should contain an actual hash-linked block structure with validation.
-
----
-
-# 5. APPLICATION PAGES
-
-The planned application will have the following pages:
+The planned application will have the following streamlined pages:
 
 ### 1. Dashboard
-An overview of the platform, its features and recent analysis activity.
+An overview of the platform, quick-access actions, recent verification activity, and key safety tips.
 
 ### 2. Prescription Analysis
-Allows users to upload handwritten prescriptions and receive AI-generated extraction results.
+Allows users to upload handwritten prescriptions and receive AI-generated extraction results with confidence ratings.
 
 ### 3. Medicine Information
-Displays detailed information retrieved for identified medicines.
+Displays detailed pharmacological information, uses, side effects, and warnings for identified medicines.
 
 ### 4. Prescription & Medicine Comparison
-Allows users to upload a prescription and a purchased medicine image for comparison.
+Allows users to upload a prescription and a purchased medicine image side-by-side for automated comparison.
 
-### 5. Medicine Authenticity Check
-Displays extracted product and batch information and checks it against the sample registry.
+### 5. Batch & Recall Verification
+Displays extracted product, batch, and expiry information, checking it against the sample safety and recall registry.
 
-### 6. Blockchain Explorer
-Displays blocks, transactions, batch history and integrity validation results.
-
-### 7. Analysis History
+### 6. Analysis History
 Displays previous analyses performed within the application.
 
 These are the intended application sections, not a requirement to implement a complicated account-management system.
 
 ---
 
-# 6. PROPOSED TECHNOLOGY STACK
+# 5. PROPOSED TECHNOLOGY STACK
 
 The following technologies are preferred:
 
@@ -273,22 +207,16 @@ The following technologies are preferred:
 - Computer vision models or services
 - OpenCV for image preprocessing
 - An AI model for organising and interpreting extracted text
+- QR code and barcode recognition
 
 **Database**
-- SQLite initially, or PostgreSQL if necessary
-
-**Blockchain and security**
-- Python-based local blockchain implementation
-- SHA-256 hashing
-- QR code generation and recognition
+- SQLite initially (lightweight and embedded)
 
 Use existing models, APIs and libraries wherever practical. We do not intend to train an AI model from scratch.
 
-The final technology choices can be evaluated later based on implementation complexity, availability and reliability.
-
 ---
 
-# 7. PROJECT LIMITATIONS AND SCOPE
+# 6. PROJECT LIMITATIONS AND SCOPE
 
 This is a school IT exhibition project.
 
@@ -296,43 +224,36 @@ We want a functional, visually impressive and technically meaningful prototype w
 
 The following are explicitly outside the initial scope:
 
-- A complete pharmaceutical medicine database.
-- Training our own handwriting recognition model.
-- Real hospital integrations.
-- Real pharmacy integrations.
-- A real pharmaceutical supply-chain network.
+- Blockchain, cryptocurrency, or distributed ledgers.
+- A complete commercial pharmaceutical medicine database.
+- Training our own handwriting recognition model from scratch.
+- Real hospital or pharmacy live integrations.
 - Real-world manufacturer verification.
 - A human doctor review workflow.
-- Automatic medical diagnosis.
-- Automatic prescription generation.
+- Automatic medical diagnosis or prescription generation.
 - Medication recommendations.
-- Cryptocurrency or mining.
-- A complicated public blockchain deployment.
 
-Do not add unnecessary features that make the application significantly more complicated without improving its demonstration.
-
-The priority is to make the core workflows functional.
+Do not add unnecessary features that make the application significantly more complicated without improving its demonstration. The priority is to make the core workflows functional.
 
 ---
 
-# 8. EXPECTED PROJECT DEMONSTRATION
+# 7. EXPECTED PROJECT DEMONSTRATION
 
 The final application should support this exhibition demonstration:
 
 1. Upload a handwritten doctor's prescription.
-2. Show the AI extracting possible medicine names.
+2. Show the AI extracting possible medicine names with confidence indicators.
 3. Display medicine information, uses, side effects and available safety alerts.
 4. Upload a photograph of a purchased medicine alongside the prescription.
-5. Show a comparison of the prescribed and purchased medicine information.
-6. Display the medicine's extracted batch information and sample registry result.
-7. Open the blockchain explorer and show the corresponding batch records.
-8. Demonstrate blockchain integrity validation and tampering detection using sample data.
+5. Show a side-by-side comparison of the prescribed and purchased medicine information (Match, Partial Match, or Mismatch).
+6. Display the medicine's extracted batch information and check it against the sample registry (verifying batch status, expiry, and any safety recall alerts).
+7. Review previous scans in the Analysis History log.
 
 The complete demonstration should take approximately 2–3 minutes.
 
 ---
 
-# 9. DEVELOPMENT PHILOSOPHY
+# 8. DEVELOPMENT PHILOSOPHY
 
 When development begins, follow these principles:
 
@@ -350,25 +271,10 @@ The finished application should feel like one integrated product, not several un
 
 ---
 
-# 10. YOUR CURRENT TASK
-
-For now, your only task is to understand and analyse the MEDIGUARD project.
-
-Do not begin implementation.
-
-After understanding this brief, respond with:
-
-1. Your understanding of the project's overall purpose.
-2. A summary of its two main features.
-3. How the medicine authenticity and blockchain components fit into the application.
-4. Your suggested technical architecture.
-5. Any potential technical challenges you anticipate.
-6. A suggested development order.
-
-Wait for my approval before making any code changes or starting development.
+# 9. CURRENT STATUS
 
 **Project name: MEDIGUARD**
 
-**Project category: AI, Computer Vision, Healthcare Technology and Blockchain**
+**Project category: AI, Computer Vision, Healthcare Information & Medicine Verification**
 
 **Primary objective: Build a lightweight AI-powered prescription analysis and medicine verification platform.**
