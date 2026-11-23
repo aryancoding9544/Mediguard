@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "MEDIGUARD Backend"
     API_V1_STR: str = "/api/v1"
     GEMINI_API_KEY: str = ""
-    GEMINI_MODEL: str = "gemini-3.1-flash-lite"
+    GEMINI_MODEL: str = "gemini-3.5-flash-lite"
     ALLOWED_ORIGINS: List[str] = ["*"]
 
     class Config:

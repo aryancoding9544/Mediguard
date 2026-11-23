@@ -13,10 +13,10 @@ import { PrescriptionAnalysisResult, VerificationComparisonResult } from '../con
 function getCandidateBaseUrls(): string[] {
   const list: string[] = [];
 
-  // 0. Render Cloud / Production configured URL (via EXPO_PUBLIC_API_URL)
-  const configuredUrl = process.env.EXPO_PUBLIC_API_URL;
-  if (configuredUrl) {
-    list.push(configuredUrl.replace(/\/+$/, ''));
+  // 0. Primary Cloud Production URL (Render backend)
+  const cloudUrl = process.env.EXPO_PUBLIC_API_URL || 'https://mediguard-backend-v8k8.onrender.com';
+  if (cloudUrl) {
+    list.push(cloudUrl.replace(/\/+$/, ''));
   }
 
   // 1. In Android Emulator, localhost is instant with `adb reverse tcp:8000 tcp:8000`

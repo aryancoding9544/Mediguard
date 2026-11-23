@@ -143,9 +143,10 @@ Return strictly a valid JSON object matching this schema:
 """
 
 CANDIDATE_MODELS = [
-    "gemini-3.1-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash",
     "gemini-3.8-flash",
-    "gemini-3-flash-preview",
+    "gemini-3.1-flash-lite",
 ]
 
 def optimize_image_bytes(image_bytes: bytes, max_dimension: int = 1400) -> tuple[bytes, str]:

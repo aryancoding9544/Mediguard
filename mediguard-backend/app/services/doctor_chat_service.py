@@ -38,8 +38,10 @@ YOUR CORE CLINICAL PRINCIPLES:
 """
 
 CANDIDATE_MODELS = [
-    "gemini-3.1-flash-lite",
+    "gemini-3.5-flash-lite",
+    "gemini-3.5-flash",
     "gemini-3.8-flash",
+    "gemini-3.1-flash-lite",
 ]
 
 class DoctorChatService:
@@ -196,7 +198,6 @@ Reference these medications by name, explain how and when to take them, address 
                         system_instruction=effective_system_prompt,
                         temperature=0.3,
                         max_output_tokens=380,
-                        thinking_config=types.ThinkingConfig(thinking_budget=0),
                     ),
                 )
                 if response and response.text:
