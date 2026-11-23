@@ -70,7 +70,7 @@ export const PRESCRIPTION_DEMO = {
 };
 
 export const USER_PROFILE = {
-  name: 'Michael Johnson',
-  location: 'New York, NY',
+  name: 'Aryan Singh',
+  location: 'U.P India',
   avatar: '👤',
 };

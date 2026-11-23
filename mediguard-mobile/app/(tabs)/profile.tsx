@@ -14,8 +14,8 @@ export default function ProfileScreen() {
         <View style={styles.avatarCircle}>
           <Feather name="user" size={36} color={Colors.textMuted} />
         </View>
-        <Text style={styles.name}>Michael Johnson</Text>
-        <Text style={styles.subtitle}>New York, NY</Text>
+        <Text style={styles.name}>Aryan Singh</Text>
+        <Text style={styles.subtitle}>U.P India</Text>
       </View>
     </SafeAreaView>
   );
