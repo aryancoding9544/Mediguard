@@ -61,6 +61,123 @@ const VERIFICATION_SUGGESTIONS = [
   '💡 Does this generic brand have the exact same clinical effectiveness?',
 ];
 
+function parseInlineMarkdown(text: string, isDoctor: boolean): React.ReactNode[] {
+  if (!text) return [];
+
+  const boldParts = text.split(/(\*\*.*?\*\*)/g);
+  const result: React.ReactNode[] = [];
+
+  boldParts.forEach((part, bIdx) => {
+    if (part.startsWith('**') && part.endsWith('**') && part.length >= 4) {
+      const boldContent = part.slice(2, -2);
+      const isCritical = /DO NOT TAKE|DANGEROUS|MISMATCH|EXPIRED|WARNING|CRITICAL|NOT SAFE|DO NOT CONSUME/i.test(boldContent);
+      const isSafe = /SAFE MATCH|EXACT MATCH|VERIFIED|APPROVED/i.test(boldContent);
+
+      result.push(
+        <Text
+          key={`b-${bIdx}`}
+          style={[
+            styles.boldText,
+            isDoctor ? styles.doctorBoldText : styles.userBoldText,
+            isCritical && (isDoctor ? styles.doctorAlertText : styles.userAlertText),
+            isSafe && (isDoctor ? styles.doctorSafeText : styles.userSafeText),
+          ]}
+        >
+          {boldContent}
+        </Text>
+      );
+    } else if (part) {
+      const italicParts = part.split(/(\*[^\*]+?\*|_[^_]+?_)/g);
+      italicParts.forEach((itPart, itIdx) => {
+        if (
+          (itPart.startsWith('*') && itPart.endsWith('*') && itPart.length >= 2) ||
+          (itPart.startsWith('_') && itPart.endsWith('_') && itPart.length >= 2)
+        ) {
+          result.push(
+            <Text
+              key={`it-${bIdx}-${itIdx}`}
+              style={[
+                styles.italicText,
+                isDoctor ? styles.doctorItalicText : styles.userItalicText,
+              ]}
+            >
+              {itPart.slice(1, -1)}
+            </Text>
+          );
+        } else if (itPart) {
+          result.push(itPart);
+        }
+      });
+    }
+  });
+
+  return result;
+}
+
+function FormattedMessage({ content, isDoctor }: { content: string; isDoctor: boolean }) {
+  if (!content) return null;
+
+  const lines = content.split('\n');
+  const elements: React.ReactNode[] = [];
+  let prevWasEmpty = false;
+
+  lines.forEach((rawLine, idx) => {
+    const trimmed = rawLine.trim();
+
+    if (!trimmed) {
+      if (!prevWasEmpty && idx > 0 && idx < lines.length - 1) {
+        elements.push(<View key={`gap-${idx}`} style={{ height: 6 }} />);
+        prevWasEmpty = true;
+      }
+      return;
+    }
+
+    prevWasEmpty = false;
+
+    // Check if line is a bullet item (* or - or + or •)
+    const isBullet = /^\s*[\*\-\+•]\s+/.test(rawLine);
+    const cleanLine = isBullet
+      ? rawLine.replace(/^\s*[\*\-\+•]\s+/, '')
+      : rawLine.replace(/^\s*#{1,6}\s+/, '');
+
+    const formattedInline = parseInlineMarkdown(cleanLine, isDoctor);
+
+    if (isBullet) {
+      elements.push(
+        <View key={`line-${idx}`} style={styles.bulletRow}>
+          <Text style={[styles.bulletDot, isDoctor ? styles.doctorText : styles.userText]}>
+            •
+          </Text>
+          <Text
+            style={[
+              styles.messageText,
+              isDoctor ? styles.doctorText : styles.userText,
+              { flex: 1 },
+            ]}
+          >
+            {formattedInline}
+          </Text>
+        </View>
+      );
+    } else {
+      elements.push(
+        <Text
+          key={`line-${idx}`}
+          style={[
+            styles.messageText,
+            isDoctor ? styles.doctorText : styles.userText,
+            styles.paragraph,
+          ]}
+        >
+          {formattedInline}
+        </Text>
+      );
+    }
+  });
+
+  return <View style={styles.formattedContainer}>{elements}</View>;
+}
+
 export default function ChatScreen() {
   const { orders, selectedOrderForChat, setSelectedOrderForChat } = useOrdersStore();
   const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
@@ -232,14 +349,7 @@ export default function ChatScreen() {
             </View>
           )}
 
-          <Text
-            style={[
-              styles.messageText,
-              isDoctor ? styles.doctorText : styles.userText,
-            ]}
-          >
-            {item.text}
-          </Text>
+          <FormattedMessage content={item.text} isDoctor={isDoctor} />
 
           <Text
             style={[
@@ -800,6 +910,55 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 21,
     fontFamily: 'PlusJakartaSans_500Medium',
+  },
+  formattedContainer: {
+    width: '100%',
+  },
+  paragraph: {
+    marginBottom: 4,
+  },
+  bulletRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginVertical: 2,
+    paddingLeft: 2,
+  },
+  bulletDot: {
+    fontSize: 14,
+    lineHeight: 21,
+    marginRight: 6,
+    fontFamily: 'PlusJakartaSans_700Bold',
+  },
+  boldText: {
+    fontFamily: 'PlusJakartaSans_700Bold',
+    fontWeight: '700',
+  },
+  doctorBoldText: {
+    color: Colors.charcoal,
+  },
+  userBoldText: {
+    color: '#FFFFFF',
+  },
+  doctorAlertText: {
+    color: '#DC2626',
+  },
+  userAlertText: {
+    color: '#FCA5A5',
+  },
+  doctorSafeText: {
+    color: '#059669',
+  },
+  userSafeText: {
+    color: '#6EE7B7',
+  },
+  italicText: {
+    fontStyle: 'italic',
+  },
+  doctorItalicText: {
+    color: Colors.textSecondary,
+  },
+  userItalicText: {
+    color: 'rgba(255, 255, 255, 0.85)',
   },
   doctorText: {
     color: Colors.textPrimary,
