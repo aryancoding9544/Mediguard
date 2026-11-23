@@ -1,0 +1,14 @@
+{
+  "name": "mediguard-root",
+  "version": "1.0.0",
+  "description": "MediGuard AI Workspace Root",
+  "scripts": {
+    "start": "npm --prefix mediguard-mobile start",
+    "android": "npm --prefix mediguard-mobile run android",
+    "ios": "npm --prefix mediguard-mobile run ios",
+    "web": "npm --prefix mediguard-mobile run web",
+    "expo": "npm --prefix mediguard-mobile run start",
+    "clean": "npm --prefix mediguard-mobile run start -- -c"
+  },
+  "private": true
+}

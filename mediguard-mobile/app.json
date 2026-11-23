@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "MediGuard",
+    "slug": "mediguard-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "mediguard",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.mediguard.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#F8F9FA",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "com.mediguard.app"
+    },
+    "androidNavigationBar": {
+      "visible": "sticky-immersive"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-font"
+    ]
+  }
+}
