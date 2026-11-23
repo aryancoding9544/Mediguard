@@ -110,8 +110,8 @@ export default function ChatScreen() {
     setIsLoading(true);
 
     try {
-      // Build conversation history for API
-      const historyPayload = newMessages
+      // Build conversation history for API (previous turns only, excluding welcome and current message)
+      const historyPayload = messages
         .filter((m) => m.id !== 'msg_welcome')
         .map((m) => ({
           role: m.sender === 'user' ? 'user' : 'model',

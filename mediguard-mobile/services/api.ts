@@ -57,7 +57,11 @@ export function getApiBaseUrl(): string {
 
 export const API_BASE_URL = getApiBaseUrl();
 
-async function postJsonWithFallback(endpointPath: string, bodyObj: any): Promise<Response> {
+async function postJsonWithFallback(
+  endpointPath: string,
+  bodyObj: any,
+  timeoutMs: number = 35000
+): Promise<Response> {
   const candidates = getCandidateBaseUrls();
   if (activeBaseUrl) {
     candidates.sort((a) => (a === activeBaseUrl ? -1 : 1));
@@ -66,6 +70,9 @@ async function postJsonWithFallback(endpointPath: string, bodyObj: any): Promise
   let lastError: any = null;
   for (const base of candidates) {
     const url = `${base}${endpointPath}`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+
     try {
       console.log(`[MediGuard] Attempting POST -> ${url}`);
       const res = await fetch(url, {
@@ -75,13 +82,16 @@ async function postJsonWithFallback(endpointPath: string, bodyObj: any): Promise
           Accept: 'application/json',
         },
         body: JSON.stringify(bodyObj),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       // If we got any HTTP response (even 4xx/5xx), the server is reachable
       activeBaseUrl = base;
       console.log(`[MediGuard] Connected to backend at: ${base}`);
       return res;
     } catch (err: any) {
+      clearTimeout(timeoutId);
       console.warn(`[MediGuard] Network connection failed for ${url}:`, err?.message || err);
       lastError = err;
 

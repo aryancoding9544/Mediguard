@@ -170,20 +170,27 @@ Reference these medications by name, explain how and when to take them, address 
         if history:
             for item in history:
                 role = "user" if item.get("role") in ["user", "patient"] else "model"
-                text = item.get("content", "")
+                text = item.get("content", "").strip()
                 if text:
-                    contents.append(
-                        types.Content(
-                            role=role,
-                            parts=[types.Part.from_text(text=text)],
+                    # Avoid duplicating the current message if passed in history
+                    if role == "user" and text == message.strip():
+                        continue
+                    # Avoid consecutive duplicate roles for Gemini API constraints
+                    if contents and contents[-1].role == role:
+                        contents[-1].parts[0].text += f"\n{text}"
+                    else:
+                        contents.append(
+                            types.Content(
+                                role=role,
+                                parts=[types.Part.from_text(text=text)],
+                            )
                         )
-                    )
 
         # Append current user prompt
         contents.append(
             types.Content(
                 role="user",
-                parts=[types.Part.from_text(text=message)],
+                parts=[types.Part.from_text(text=message.strip())],
             )
         )
 
