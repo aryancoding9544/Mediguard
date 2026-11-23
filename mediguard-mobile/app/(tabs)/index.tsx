@@ -5,7 +5,7 @@ import { Colors } from '../../constants/Colors';
 import { HeaderProfile } from '../../components/dashboard/HeaderProfile';
 import { HeroSearch } from '../../components/dashboard/HeroSearch';
 import { QuickActionGrid } from '../../components/dashboard/QuickActionGrid';
-import { MedicineCarousel } from '../../components/dashboard/MedicineCarousel';
+import { DualAuditCard } from '../../components/dashboard/DualAuditCard';
 
 export default function HomeScreen() {
   return (
@@ -18,7 +18,7 @@ export default function HomeScreen() {
         <HeaderProfile />
         <HeroSearch />
         <QuickActionGrid />
-        <MedicineCarousel />
+        <DualAuditCard />
       </ScrollView>
     </SafeAreaView>
   );
