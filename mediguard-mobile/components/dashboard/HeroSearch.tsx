@@ -7,8 +7,10 @@ export const HeroSearch: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
-        <Text style={styles.lightText}>Find Your</Text>
-        <Text style={styles.boldText}>Medicines Fast</Text>
+        <Text style={styles.lightText}>Verify Your</Text>
+        <Text style={styles.boldText} numberOfLines={1} adjustsFontSizeToFit>
+          Prescriptions Safely
+        </Text>
       </View>
       <TouchableOpacity style={styles.searchButton} activeOpacity={0.8}>
         <Feather name="search" size={24} color="#FFFFFF" />
@@ -27,19 +29,21 @@ const styles = StyleSheet.create({
     paddingBottom: 24,
   },
   textContainer: {
+    flex: 1,
+    marginRight: 12,
     gap: 4,
   },
   lightText: {
-    fontSize: 32,
+    fontSize: 28,
     fontFamily: 'PlusJakartaSans_400Regular',
     color: Colors.textMuted,
-    lineHeight: 38,
+    lineHeight: 34,
   },
   boldText: {
-    fontSize: 34,
+    fontSize: 30,
     fontFamily: 'PlusJakartaSans_800ExtraBold',
     color: Colors.textPrimary,
-    lineHeight: 40,
+    lineHeight: 36,
   },
   searchButton: {
     width: 54,
