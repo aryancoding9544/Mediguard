@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   scanButtonWrapper: {
-    top: -30,
+    top: -16,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 6,
